@@ -249,6 +249,9 @@ class IntlPhoneField extends StatefulWidget {
   /// If null, default magnification configuration will be used.
   final TextMagnifierConfiguration? magnifierConfiguration;
 
+  /// The size of the flag.
+  final double flagSize;
+
   const IntlPhoneField({
     Key? key,
     this.formFieldKey,
@@ -296,6 +299,7 @@ class IntlPhoneField extends StatefulWidget {
     this.pickerDialogStyle,
     this.flagsButtonMargin = EdgeInsets.zero,
     this.magnifierConfiguration,
+    this.flagSize = 32,
   }) : super(key: key);
 
   @override
@@ -307,7 +311,6 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
   late Country _selectedCountry;
   late List<Country> filteredCountries;
   late String number;
-
   String? validatorMessage;
 
   @override
@@ -319,15 +322,17 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
     if (widget.initialCountryCode == null && number.startsWith('+')) {
       number = number.substring(1);
       // parse initial value
-      _selectedCountry = countries.firstWhere((country) => number.startsWith(country.fullCountryCode),
-          orElse: () => _countryList.first);
-
+      _selectedCountry = countries.firstWhere(
+        (country) => number.startsWith(country.fullCountryCode),
+        orElse: () => _countryList.first,
+      );
       // remove country code from the initial number value
       number = number.replaceFirst(RegExp("^${_selectedCountry.fullCountryCode}"), "");
     } else {
-      _selectedCountry = _countryList.firstWhere((item) => item.code == (widget.initialCountryCode ?? 'US'),
-          orElse: () => _countryList.first);
-
+      _selectedCountry = _countryList.firstWhere(
+        (item) => item.code == (widget.initialCountryCode ?? 'US'),
+        orElse: () => _countryList.first,
+      );
       // remove country code from the initial number value
       if (number.startsWith('+')) {
         number = number.replaceFirst(RegExp("^\\+${_selectedCountry.fullCountryCode}"), "");
@@ -353,6 +358,31 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
         });
       }
     }
+
+    // Add a listener to the TextEditingController if it is provided
+    widget.controller?.addListener(_onControllerChanged);
+  }
+
+  @override
+  void dispose() {
+    // Remove the listener from the TextEditingController if it was added
+    widget.controller?.removeListener(_onControllerChanged);
+    super.dispose();
+  }
+
+  Future<void> _onControllerChanged() async {
+    final value = widget.controller?.text ?? '';
+    final phoneNumber = PhoneNumber(
+      countryISOCode: _selectedCountry.code,
+      countryCode: '+${_selectedCountry.fullCountryCode}',
+      number: value,
+    );
+
+    if (widget.autovalidateMode != AutovalidateMode.disabled) {
+      validatorMessage = await widget.validator?.call(phoneNumber);
+    }
+
+    widget.onChanged?.call(phoneNumber);
   }
 
   Future<void> _changeCountry() async {
@@ -475,7 +505,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                       ? Image.asset(
                           'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
                           package: 'intl_phone_field',
-                          width: 32,
+                          width: widget.flagSize,
                         )
                       : Text(
                           _selectedCountry.flag,
