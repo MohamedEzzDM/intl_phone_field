@@ -299,7 +299,7 @@ class IntlPhoneField extends StatefulWidget {
     this.pickerDialogStyle,
     this.flagsButtonMargin = EdgeInsets.zero,
     this.magnifierConfiguration,
-    this.flagSize = 32,
+    this.flagSize = 18,
   }) : super(key: key);
 
   @override
@@ -506,10 +506,11 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
                           'assets/flags/${_selectedCountry.code.toLowerCase()}.png',
                           package: 'intl_phone_field',
                           width: widget.flagSize,
+                          height: widget.flagSize,
                         )
                       : Text(
                           _selectedCountry.flag,
-                          style: const TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: widget.flagSize),
                         ),
                   const SizedBox(width: 8),
                 ],
