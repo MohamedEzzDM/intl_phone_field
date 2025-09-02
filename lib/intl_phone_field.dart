@@ -389,7 +389,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
     filteredCountries = _countryList;
     await showDialog(
       context: context,
-      useRootNavigator: false,
+      useRootNavigator: true,
       builder: (context) => StatefulBuilder(
         builder: (ctx, setState) => CountryPickerDialog(
           languageCode: widget.languageCode.toLowerCase(),
