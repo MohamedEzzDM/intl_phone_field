@@ -387,9 +387,10 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
 
   Future<void> _changeCountry() async {
     filteredCountries = _countryList;
-    await showDialog(
+    await showModalBottomSheet(
       context: context,
-      useRootNavigator: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => StatefulBuilder(
         builder: (ctx, setState) => CountryPickerDialog(
           languageCode: widget.languageCode.toLowerCase(),
