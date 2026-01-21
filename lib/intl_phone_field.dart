@@ -99,6 +99,15 @@ class IntlPhoneField extends StatefulWidget {
   /// showing when it is tapped by calling [EditableTextState.requestKeyboard()].
   final FocusNode? focusNode;
 
+  /// Whether this text field should expand to fit its container.
+  final bool expands;
+
+  /// The maximum number of lines for the text being edited.
+  final int? maxLines;
+
+  /// The minimum number of lines for the text being edited.
+  final int? minLines;
+
   /// {@macro flutter.widgets.editableText.onSubmitted}
   ///
   /// See also:
@@ -267,6 +276,9 @@ class IntlPhoneField extends StatefulWidget {
     this.keyboardType = TextInputType.phone,
     this.controller,
     this.focusNode,
+    this.expands = false,
+    this.maxLines,
+    this.minLines,
     this.decoration = const InputDecoration(),
     this.style,
     this.dropdownTextStyle,
@@ -424,6 +436,9 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       onTap: widget.onTap,
       controller: widget.controller,
       focusNode: widget.focusNode,
+      expands: widget.expands,
+      maxLines: widget.maxLines,
+      minLines: widget.minLines,
       cursorHeight: widget.cursorHeight,
       cursorRadius: widget.cursorRadius,
       cursorWidth: widget.cursorWidth,
