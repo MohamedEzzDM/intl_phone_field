@@ -217,7 +217,7 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                   ),
               itemCount: _filteredCountries.length,
               separatorBuilder: (ctx, index) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 child: widget.style?.listTileDivider ??
                     const Divider(
                       thickness: 1,
