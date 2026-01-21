@@ -105,7 +105,7 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
     const defaultPrefixIcon = Padding(
       padding: EdgeInsetsDirectional.only(start: 10.0, end: 4.0),
       child: Icon(
-        Icons.search,
+        Icons.search_rounded,
         color: Colors.black,
         size: 20,
       ),
@@ -141,58 +141,67 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
           // Search TextField with custom styling
           Padding(
             padding: widget.style?.searchFieldPadding ?? const EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextFormField(
-              controller: _searchController,
-              focusNode: _searchFocusNode,
-              cursorColor: widget.style?.searchFieldCursorColor ?? const Color(0xFF231F20),
-              style: widget.style?.searchFieldTextStyle ??
-                  const TextStyle(
+            child: SizedBox(
+              height: 48,
+              child: TextFormField(
+                controller: _searchController,
+                expands: true,
+                minLines: null,
+                maxLines: null,
+                focusNode: _searchFocusNode,
+                cursorColor: widget.style?.searchFieldCursorColor ?? const Color(0xFF231F20),
+                style: widget.style?.searchFieldTextStyle ??
+                    const TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF231F20),
+                    ),
+                decoration: InputDecoration(
+                  fillColor: widget.style?.searchFieldFillColor ?? Colors.transparent,
+                  filled: true,
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 0.0,
+                  ),
+                  hintText: widget.searchText,
+                  hintStyle: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF231F20),
+                    color: widget.style?.searchFieldHintColor ?? const Color(0xFF666666),
                   ),
-              decoration: InputDecoration(
-                fillColor: widget.style?.searchFieldFillColor ?? Colors.transparent,
-                filled: true,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 10.0,
-                ),
-                hintText: widget.searchText,
-                hintStyle: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400,
-                  color: widget.style?.searchFieldHintColor ?? const Color(0xFF666666),
-                ),
-                prefixIconConstraints: const BoxConstraints(minWidth: 24, maxHeight: 24),
-                prefixIcon: widget.style?.searchFieldPrefixIcon ?? defaultPrefixIcon,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: widget.style?.searchFieldBorderRadius ?? const BorderRadius.all(Radius.circular(12.0)),
-                  borderSide: BorderSide(
-                    color: widget.style?.searchFieldBorderColor ?? const Color(0xFFD6D6D6),
-                    width: 1,
+                  prefixIconConstraints: const BoxConstraints(minWidth: 24, maxHeight: 24),
+                  prefixIcon: widget.style?.searchFieldPrefixIcon ?? defaultPrefixIcon,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius:
+                        widget.style?.searchFieldBorderRadius ?? const BorderRadius.all(Radius.circular(12.0)),
+                    borderSide: BorderSide(
+                      color: widget.style?.searchFieldBorderColor ?? const Color(0xFFD6D6D6),
+                      width: 1,
+                    ),
                   ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: widget.style?.searchFieldBorderRadius ?? const BorderRadius.all(Radius.circular(12.0)),
-                  borderSide: BorderSide(
-                    color: widget.style?.searchFieldFocusedBorderColor ?? const Color(0xFF231F20),
-                    width: 1,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius:
+                        widget.style?.searchFieldBorderRadius ?? const BorderRadius.all(Radius.circular(12.0)),
+                    borderSide: BorderSide(
+                      color: widget.style?.searchFieldFocusedBorderColor ?? const Color(0xFF231F20),
+                      width: 1,
+                    ),
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius:
+                        widget.style?.searchFieldBorderRadius ?? const BorderRadius.all(Radius.circular(12.0)),
+                  ),
+                  counterText: '',
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: widget.style?.searchFieldBorderRadius ?? const BorderRadius.all(Radius.circular(12.0)),
-                ),
-                counterText: '',
+                onChanged: (value) {
+                  _filteredCountries = widget.countryList.stringSearch(value)
+                    ..sort(
+                      (a, b) => a.localizedName(widget.languageCode).compareTo(b.localizedName(widget.languageCode)),
+                    );
+                  if (mounted) setState(() {});
+                },
               ),
-              onChanged: (value) {
-                _filteredCountries = widget.countryList.stringSearch(value)
-                  ..sort(
-                    (a, b) => a.localizedName(widget.languageCode).compareTo(b.localizedName(widget.languageCode)),
-                  );
-                if (mounted) setState(() {});
-              },
             ),
           ),
           const SizedBox(height: 8),
